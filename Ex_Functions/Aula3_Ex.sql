@@ -162,15 +162,15 @@ Select Function3(2, 3, 1) AS "Média dos 3 valores";
 
 # 4 Crie uma Função que : Calcule a expressao : x+2(y-1)*5+x;
 Delimiter $$
-CREATE FUNCTION Function4()
+CREATE FUNCTION Function4(x DOUBLE, y DOUBLE)
 RETURNS DOUBLE
 BEGIN
 	RETURN (
-        
+        x+2*(y-1)*5+x
     );
 END $$
 Delimiter ;
-Select Function4() AS "Calculando a expressao : x+2(y-1)*5+x";
+Select Function4(5, 6) AS "Calculando a expressao : x+2(y-1)*5+x";
 
 # 5 Crie uma Função que : apresente um texto com palavras escritas ao contrario. 
 #   precisam ser 3 palavras e todas devem ser palímdromos
@@ -179,7 +179,7 @@ CREATE FUNCTION Function5()
 RETURNS DOUBLE
 BEGIN
 	RETURN (
-        
+        CONCAT(REVERSE('ovo'), ' ', REVERSE('arara'), ' ', REVERSE('radar'))
     );
 END $$
 Delimiter ;
