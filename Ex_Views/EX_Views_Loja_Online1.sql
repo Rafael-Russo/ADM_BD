@@ -33,8 +33,7 @@ FROM ITEMSPEDIDOS I
 JOIN PEDIDOS P
 ON P.idPedido = I.fk_id_Pedido
 JOIN PRODUTOS PROD
-ON PROD.idProduto = I.fk_id_Produto
-GROUP BY P.idPedido;
+ON PROD.idProduto = I.fk_id_Produto;
 SELECT * FROM VEX5;
 
 # 6 Crie uma view que apresente qual o maior pedido em valor
@@ -135,7 +134,8 @@ JOIN PEDIDOS PED
 ON I.fk_id_Pedido = PED.idPedido
 JOIN CLIENTES C
 ON PED.fk_id_Cliente = C.idCliente
-WHERE C.nome = 'Maria de Almeida';
+WHERE C.nome = 'Maria de Almeida'
+GROUP BY PROD.descricao;
 SELECT * FROM VEX15;
 
 # 16 Crie uma view que apresente o total de produtos fabricados pela Marte Roupas

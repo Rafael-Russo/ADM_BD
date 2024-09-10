@@ -176,7 +176,7 @@ Select Function4(5, 6) AS "Calculando a expressao : x+2(y-1)*5+x";
 #   precisam ser 3 palavras e todas devem ser palímdromos
 Delimiter $$
 CREATE FUNCTION Function5()
-RETURNS DOUBLE
+RETURNS VARCHAR(30)
 BEGIN
 	RETURN (
         CONCAT(REVERSE('ovo'), ' ', REVERSE('arara'), ' ', REVERSE('radar'))
@@ -191,12 +191,12 @@ CREATE FUNCTION Function6(ID_Venda INT)
 RETURNS DOUBLE
 BEGIN
 	Declare resultado double;
-	SELECT valorTotalPedido INTO resultdo FROM Pedidos WHERE idPedido = ID_Venda;
+	SELECT valorTotalPedido INTO resultado FROM Pedidos WHERE idPedido = ID_Venda;
 	SET resultado = resultado * 0.95;
 	UPDATE PEDIDOS SET valorTotalPedido = resultado WHERE idPedido = ID_Venda;
 	RETURN (
-        SELECT valorTotalPedido INTO resultdo FROM Pedidos WHERE idPedido = ID_Venda
+        SELECT valorTotalPedido FROM Pedidos WHERE idPedido = ID_Venda
     );
 END $$
 Delimiter ;
-Select Function6() AS "Aplicando 5% a uma venda";
+Select Function6(1) AS "Aplicando 5% a uma venda";
