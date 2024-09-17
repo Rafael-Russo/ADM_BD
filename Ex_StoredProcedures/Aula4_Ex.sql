@@ -272,12 +272,28 @@ cadastrados. Crie a tabela colaboradores e insira 5 tuplas.
 
 */
 DELIMITER $$
-CREATE PROCEDURE SP_EX02(IN valor1 INT, OUT result DOUBLE)
+CREATE PROCEDURE SP_EX02()
 BEGIN
+    SELECT COUNT(clientes.idCliente) AS Clientes FROM clientes;
+    SELECT COUNT(fornecedores.idFornecedor) AS fornecedores FROM fornecedores;
     
+    CREATE TABLE IF NOT EXISTS colaboradores (
+		idColaboradores INT AUTO_INCREMENT PRIMARY KEY,
+        nome VARCHAR(60) NOT NULL,
+        dataOp date NOT NULL,
+        usuario VARCHAR(90) NOT NULL
+    );
+    
+    INSERT INTO colaboradores 
+    VALUES	(null, 'RAFAEL', CURDATE(), USER()), 
+			(null, 'VITOR', CURDATE(), USER()),
+			(null, 'ELENA', CURDATE(), USER()),
+			(null, 'GABRIEL', CURDATE(), USER()),
+			(null, 'ANA', CURDATE(), USER());
 END$$
 DELIMITER ;
 
+CALL SP_EX02();
 /* Exercicio 3
 Crie uma Stored Procedure para resolver o problema de Mariana, 
 ela quis usar uma fita para embrulhar um pacote. Após uma rápida 
@@ -290,11 +306,20 @@ m        dm        cm         mm
 1m       0,1m     0,01m      0,001m
 */
 DELIMITER $$
-CREATE PROCEDURE SP_EX03(IN valor1 INT, OUT result DOUBLE)
+CREATE PROCEDURE SP_EX03(OUT result DOUBLE)
 BEGIN
+	DECLARE cm DOUBLE;
+    DECLARE valor DOUBLE;
     
+    SET valor = 4/100;
+    SET cm = 45;
+    
+    SET result = valor*cm;
 END$$
 DELIMITER ;
+
+CALL SP_EX03(@result);
+SELECT @result;
 
 /* Exercicio 4
  Crie uma Stored Procedure que leia um número e calcule o seu 
@@ -303,11 +328,14 @@ acrescente a esse numero a raiz quadrada de 81. Obs: deve-se
 fazer a conta da raiz quadrada na procedure também. 
 */
 DELIMITER $$
-CREATE PROCEDURE SP_EX04(IN valor1 INT, OUT result DOUBLE)
+CREATE PROCEDURE SP_EX04(IN valor INT, OUT result DOUBLE)
 BEGIN
-    
+    SET result = POW(valor, 2) + SQRT(81);
 END$$
 DELIMITER ;
+
+CALL SP_EX04(8, @result);
+SELECT @result;
 
 /* Exercicio 5
  No Brasil a taxa de imposto de um determinado carro é de 52%, na 
@@ -324,12 +352,15 @@ CONCESSIONÁRIA %    3.5                      1.5
 
 */
 DELIMITER $$
-CREATE PROCEDURE SP_EX05(IN valor1 INT, OUT result DOUBLE)
+CREATE PROCEDURE SP_EX05(OUT resultArg DOUBLE, OUT resultBra DOUBLE)
 BEGIN
-    
+    SET resultArg = (8000 * 1.21 + 1100) * 1.015;
+    SET resultBra = (11000 * 1.52 + 2450) * 1.035;
 END$$
 DELIMITER ;
 
+CALL SP_EX05(@resultArg, @resultBra);
+SELECT @resultArg AS "Preço(Argentina)", @resultBra AS "Preço(Brasil)";
 
 /* Exercicio 6
 
@@ -349,8 +380,51 @@ Milkshake..................... R$ 3,00
 
 */
 DELIMITER $$
-CREATE PROCEDURE SP_EX06(IN valor1 INT, OUT result DOUBLE)
+CREATE PROCEDURE SP_EX06_01()
 BEGIN
+    CREATE TABLE IF NOT EXISTS cardapio (
+		idCardapio INT AUTO_INCREMENT PRIMARY KEY,
+        descricao VARCHAR(60) NOT NULL,
+        preco DOUBLE NOT NULL
+    );
     
+    INSERT INTO cardapio 
+    VALUES	(null, 'Hambúrguer', 3.0),
+			(null, 'Cheeseburger', 2.5),
+			(null, 'Fritas', 2.5),
+			(null, 'Refrigerante', 1.0),
+			(null, 'Milkshake', 3.0);
+            
+	CREATE TABLE IF NOT EXISTS consumocliente (
+		idConsumoCliente INT AUTO_INCREMENT PRIMARY KEY,
+        quantidade INT NOT NULL,
+        fk_idCardapio INT NOT NULL,
+        fk_idCliente INT NOT NULL,
+        
+        FOREIGN KEY (`fk_idCardapio`) REFERENCES `cardapio` (`idCardapio`),
+		FOREIGN KEY (`fk_idCliente`) REFERENCES `clientes` (`idCliente`)
+    );
+      
+	INSERT INTO consumocliente (quantidade, fk_idCardapio, fk_idCliente) VALUES
+    (2, 1, 1),
+    (1, 3, 2),
+    (3, 4, 3),
+    (1, 5, 4),
+    (5, 2, 5);
 END$$
 DELIMITER ;
+
+CALL SP_EX06_01();
+
+DELIMITER $$
+CREATE PROCEDURE SP_EX06_02(IN var_idCliente INT, IN var_idCardapio INT)
+BEGIN
+    SELECT CLI.idCliente, CLI.nome, CON.quantidade, CAR.descricao, CAR.preco, (CAR.preco * CON.quantidade) 
+    FROM clientes AS CLI 
+    JOIN consumocliente AS CON ON CLI.idCliente = CON.fk_idCliente 
+    JOIN cardapio AS CAR ON CON.fk_idCardapio = CAR.idCardapio 
+    WHERE CLI.idCliente = var_idCliente AND CAR.idCardapio = var_idCardapio;
+END$$
+DELIMITER ;
+
+CALL SP_EX06_02(1, 1);
