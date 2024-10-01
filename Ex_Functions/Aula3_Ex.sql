@@ -1,7 +1,7 @@
 # ----------Exemplo 1---Retira pontos de um texto------------------------------------
 Delimiter $$
 CREATE FUNCTION Retira_Caracter1 (retira VARCHAR(60))
-RETURNS VARCHAR(60) 
+RETURNS VARCHAR(60) deterministic
 BEGIN
    RETURN REPLACE(retira,'.','');
 END $$
@@ -97,7 +97,7 @@ Select Tamanho_Palavra ('Administracao de Banco de Dados')AS Tamanho_Palavra;
 #---------Exemplo 9------Aumentar Limite Credito------------------------------------
 Delimiter $$
 CREATE FUNCTION Limite_Credito(id_Cliente INT, aumentoLimite double)
-RETURNS double 
+RETURNS double deterministic
 BEGIN
 Declare lcn, resultado double;
 SELECT limiteCredito INTO lcn FROM Clientes WHERE idCliente = id_Cliente;
@@ -108,7 +108,7 @@ END $$
 Delimiter ;
 Select Limite_Credito(5,10) AS "Novo Limite";
 
-DROP FUNCTION Limite_Credito;
+#DROP FUNCTION Limite_Credito;
 
 # usando a funcao que acabamos de criar
 
@@ -117,6 +117,7 @@ limiteCredito AS "Limite Antigo",
 Limite_Credito(idCliente,10) AS "Limite Novo"
 FROM clientes;
 # -----   Exercicios Funcoes  ----
+SET GLOBAL log_bin_trust_function_creators = 1;
 # 1 Crie uma Função que : pesquise um nome que termine com a letra S na tabela Fornecedores
 Delimiter $$
 CREATE FUNCTION Function1()
