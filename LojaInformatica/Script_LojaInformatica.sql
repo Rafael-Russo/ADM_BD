@@ -1,0 +1,51 @@
+#------------------------------DDL-------------------------------------------
+DROP SCHEMA IF EXISTS LojaInformatica2;
+CREATE SCHEMA LojaInformatica2;
+USE LojaInformatica2;
+CREATE TABLE ENDERECOS(
+idEndereco INT PRIMARY KEY AUTO_INCREMENT,
+Logradouro VARCHAR(100) NOT NULL,
+numero VARCHAR(100) NOT NULL,
+complemento VARCHAR(100) NOT NULL,
+cep VARCHAR(100) NOT NULL,
+bairro VARCHAR(100) NOT NULL,
+cidade VARCHAR(100) NOT NULL,
+estado VARCHAR(100) NOT NULL
+);
+CREATE TABLE CLIENTES(
+idCliente INT PRIMARY KEY AUTO_INCREMENT,
+nome VARCHAR(100) NOT NULL,
+email VARCHAR(100) NOT NULL,
+cpf VARCHAR(100) NOT NULL,
+limiteCredito DECIMAL(10,2),
+fk_idEndereco INT NOT NULL,
+FOREIGN KEY (fk_idEndereco)REFERENCES ENDERECOS(idEndereco)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE
+);
+CREATE TABLE PRODUTOS(
+idProduto INT PRIMARY KEY AUTO_INCREMENT,
+descricao VARCHAR(100) NOT NULL,
+tipo VARCHAR(100) NOT NULL,
+precoCompra DECIMAL(10,2),
+precoVenda DECIMAL(10,2)
+);
+CREATE TABLE VENDAS(
+idVenda INT PRIMARY KEY AUTO_INCREMENT,
+fk_idCliente INT NOT NULL,
+valorTotal DECIMAL(10,2),
+dataVenda DATETIME NOT NULL,
+FOREIGN KEY (fk_idCliente)REFERENCES CLIENTES(idCliente)
+ ON DELETE CASCADE
+ ON UPDATE CASCADE
+);
+CREATE TABLE ITEMSVENDAS(
+idItemVenda INT PRIMARY KEY AUTO_INCREMENT,
+fk_idVenda INT NOT NULL,
+fk_idProduto INT NOT NULL,
+quantidade INT NOT NULL,
+FOREIGN KEY (fk_idVenda)REFERENCES VENDAS(idVenda)ON DELETE CASCADE ON UPDATE CASCADE,
+FOREIGN KEY (fk_idProduto)REFERENCES PRODUTOS(idProduto)
+);
+#--------------------------------DML-------------------------------------------------
+
