@@ -1,3 +1,5 @@
+/*Trabalho realizado por Vitor Menezes Saliba (RA: 12118262) e Rafael Russo Soares (RA: 12118482)*/
+
 DROP SCHEMA IF EXISTS `NewtonLoc`;
 CREATE SCHEMA `NewtonLoc`;
 USE `NewtonLoc`;
